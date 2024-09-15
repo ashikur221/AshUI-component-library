@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        universe_primary: '#f78230',
-        universe_secondary: '#004CAD',
+        ashUi_primary: '#AC0DDF',
+        ashUi_secondary: '#3515AF',
         text_primari: '#f26604', 
         bg_btn_primary: '#f26604', 
         bg_btn_hover: '#da5c04', 
