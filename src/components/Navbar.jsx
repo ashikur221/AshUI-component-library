@@ -90,16 +90,23 @@ const Navbar = () => {
     const logo = 'https://res.cloudinary.com/deifi77os/image/upload/v1726391234/AshUI/Homepage/ilg3csbhzu6arwfkq25l.png';
 
     const NavLinkStyle =
-        'text-ashUi_secondary hover:text-text_primari text-xl py-[5px] hover:px-[10px] lg:px-[10px] transition-all duration-300 font-medium';
+        'text-gray-600 hover:text-text_primari text-xl py-[5px] hover:px-[10px] lg:px-[10px] transition-all duration-300 font-medium';
 
     const navNavLinks = (
         <>
 
-            <NavLink to="/" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
-                Home
+            <NavLink to="/components" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
+                Components
             </NavLink>
 
 
+            <NavLink to="/" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
+                Templates
+            </NavLink>
+            
+            <NavLink to="/" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
+                Pricing
+            </NavLink>
 
             {/* Products Dropdown Toggle */}
             <p
