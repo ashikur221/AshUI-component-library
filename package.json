@@ -10,6 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@tanstack/react-query": "^5.59.20",
+    "@uiw/react-codemirror": "^4.23.6",
+    "axios": "^1.7.7",
+    "firebase": "^11.0.1",
     "framer-motion": "^11.5.4",
     "hamburger-react": "^2.5.1",
     "localforage": "^1.10.0",
@@ -19,7 +24,8 @@
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
     "react-router-dom": "^6.26.2",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "sweetalert2": "^11.14.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
