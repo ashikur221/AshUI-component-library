@@ -3,20 +3,30 @@ import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
+import { uploadImg } from "../../../uploadFile/UploadImg";
 
 const AddComponent = ({ onSubmit }) => {
   const [componentName, setComponentName] = useState("");
   const [componentDescription, setComponentDescription] = useState("");
   const [componentCode, setComponentCode] = useState("");
-  const [tags, setTags] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    const form = e.target;
+    const image = form.image.files[0];
 
-    const data = { componentName, componentDescription, componentCode, tags };
+    let imageUrl = '';
+    if (!image?.name) {
+      imageUrl = ''
+    } else {
+      imageUrl = await uploadImg(image);
+    }
+
+    const data = { componentName, componentDescription, componentCode, imageUrl };
 
     try {
       const res = await axiosPublic.post('/component', data);
@@ -42,50 +52,50 @@ const AddComponent = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
-      <div>
-        <label className="block font-semibold text-gray-700">Component Name:</label>
-        <input
-          type="text"
-          value={componentName}
-          onChange={(e) => setComponentName(e.target.value)}
-          placeholder="Enter component name"
-          className="mt-1 w-full p-2 border border-gray-300 rounded"
-          required
-        />
-      </div>
+      <div className="grid lg:grid-cols-2 gap-4">
+        <div>
+          <label className="block font-semibold text-gray-700">Component Name:</label>
+          <input
+            type="text"
+            value={componentName}
+            onChange={(e) => setComponentName(e.target.value)}
+            placeholder="Enter component name"
+            className="mt-1 w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+        {/* image url  */}
+        <div className="p-2 w-full">
+          <div className="relative">
+            <label className="leading-7 text-sm text-gray-600 font-bold">Component Image</label><br />
+            <input type="file" name='image' className="file-input file-input-bordered file-input-md w-full" />
+          </div>
+        </div>
 
-      <div>
-        <label className="block font-semibold text-gray-700">Description:</label>
-        <textarea
-          value={componentDescription}
-          onChange={(e) => setComponentDescription(e.target.value)}
-          placeholder="Enter component description"
-          className="mt-1 w-full p-2 border border-gray-300 rounded"
-          rows="3"
-        />
-      </div>
+        <div>
+          <label className="block font-semibold text-gray-700">Description:</label>
+          <textarea
+            value={componentDescription}
+            onChange={(e) => setComponentDescription(e.target.value)}
+            placeholder="Enter component description"
+            className="mt-1 w-full p-2 border border-gray-300 rounded"
+            rows="7"
+          />
+        </div>
 
-      <div>
-        <label className="block font-semibold text-gray-700">Code:</label>
-        <CodeMirror
-          value={componentCode}
-          height="200px"
-          extensions={[javascript()]}
-          theme="light"
-          onChange={(value) => setComponentCode(value)}
-          className="border border-gray-300 rounded"
-        />
-      </div>
+        <div>
+          <label className="block font-semibold text-gray-700">Code:</label>
+          <CodeMirror
+            value={componentCode}
+            height="200px"
+            extensions={[javascript()]}
+            theme="light"
+            onChange={(value) => setComponentCode(value)}
+            className="border border-gray-300 rounded"
+          />
+        </div>
 
-      <div>
-        <label className="block font-semibold text-gray-700">Tags (optional):</label>
-        <input
-          type="text"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          placeholder="Add tags (e.g., button, form)"
-          className="mt-1 w-full p-2 border border-gray-300 rounded"
-        />
+        
       </div>
 
       <div className="w-1/4 mx-auto">

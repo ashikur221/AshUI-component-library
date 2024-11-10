@@ -1,129 +1,137 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
+import { uploadImg } from "../../../uploadFile/UploadImg";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 const UpdateComponentForm = () => {
-  const [componentData, setComponentData] = useState(null);
+
+  const [componentCode, setComponentCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
-
-  // Fetch component data for the selected component
-  const { data: component = {}, refetch } = useQuery({
+  const { data: component = {} } = useQuery({
     queryKey: ['component'],
     queryFn: async () => {
       const res = await axiosPublic.get(`/component/${id}`);
       return res.data;
     }
-  });
+  })
 
-  // Set componentData once component is fetched
-  useEffect(() => {
-    if (component) {
-      setComponentData(component);
-    }
-  }, [component]);
-
-
-  // Handle updating component
-  const handleUpdate = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    const form = e.target;
+    const componentName = form.componentName.value;
+    const image = form.image.files[0];
+    const componentDescription = form.componentDescription.value;
 
-    axiosPublic.put(`/component/${id}`, componentData)
-      .then(res => {
-        if (res) {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "User Data Updated",
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
+    let imageUrl = component?.imageUrl;
+    if (!image?.name) {
+      imageUrl = component?.imageUrl;
+    } else {
+      imageUrl = await uploadImg(image);
+    }
 
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
+    const data = { componentName, componentDescription, componentCode, imageUrl };
+    console.log(data);
 
-
+    try {
+      const res = await axiosPublic.post('/component', data);
+      if (res) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your component has been added.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      
+      setComponentCode("");
+      
+      setIsLoading(false);
+    }
   };
 
-  // Update component fields
-  const handleChange = (field, value) => {
-    setComponentData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  return componentData ? (
-    <form onSubmit={handleUpdate} className="p-4 bg-white shadow-md rounded-md space-y-4">
-      <h2 className="text-xl font-semibold mb-4">Edit Component</h2>
-
-      <div>
-        <label className="block font-semibold text-gray-700">Component Name:</label>
-        <input
-          type="text"
-          value={componentData.componentName}
-          onChange={(e) => handleChange("componentName", e.target.value)}
-          className="mt-1 w-full p-2 border border-gray-300 rounded"
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block font-semibold text-gray-700">Description:</label>
-        <textarea
-          value={componentData.componentDescription}
-          onChange={(e) => handleChange("componentDescription", e.target.value)}
-          className="mt-1 w-full p-2 border border-gray-300 rounded"
-          rows="3"
-        />
-      </div>
-
-      <div>
-        <label className="block font-semibold text-gray-700">Code:</label>
-        <CodeMirror
-          value={componentData.componentCode}
-          height="200px"
-          extensions={[javascript()]}
-          theme="light"
-          onChange={(value) => handleChange("componentCode", value)}
-          className="border border-gray-300 rounded"
-        />
-      </div>
-
-      <div>
-        <label className="block font-semibold text-gray-700">Tags (optional):</label>
-        <input
-          type="text"
-          value={componentData.tags}
-          onChange={(e) => handleChange("tags", e.target.value)}
-          className="mt-1 w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-
-      <button
-        type="submit"
-        className={`w-full py-2 px-4 rounded ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} text-white transition`}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center space-x-2">
-            <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-opacity-75"></span>
-            <span>Updating...</span>
+  return (
+    <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
+      <div className="grid lg:grid-cols-2 gap-4">
+        <div>
+          <label className="block font-semibold text-gray-700">Component Name:</label>
+          <input
+            type="text"
+            defaultValue={component?.componentName}
+            name="componentName"
+            placeholder="Enter component name"
+            className="mt-1 w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+        {/* image url  */}
+        <div className="p-2 w-full">
+          <div className="relative">
+            <label className="leading-7 text-sm text-gray-600 font-bold">Component Image</label><br />
+            <input type="file" name='image' className="file-input file-input-bordered file-input-md w-full" />
           </div>
-        ) : (
-          "Update Component"
-        )}
-      </button>
+          <div className="avatar">
+            <p>Already uploaded image:</p>
+            <div className="w-12 rounded">
+              <img src={component?.imageUrl} />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-gray-700">Description:</label>
+          <textarea
+            defaultValue={component?.componentDescription}
+            name="componentDescription"
+            placeholder="Enter component description"
+            className="mt-1 w-full p-2 border border-gray-300 rounded"
+            rows="7"
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold text-gray-700">Code:</label>
+          <CodeMirror
+            value={component?.componentCode}
+            height="200px"
+            extensions={[javascript()]}
+            theme="light"
+            onChange={(value) => setComponentCode(value)}
+            className="border border-gray-300 rounded"
+          />
+        </div>
+
+
+      </div>
+
+      <div className="w-1/4 mx-auto">
+        <button
+          type="submit"
+          className={`w-full py-2 px-4 rounded ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+            } text-white transition`}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center space-x-2">
+              <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-opacity-75"></span>
+              <span>Uploading...</span>
+            </div>
+          ) : (
+            "Add Component"
+          )}
+        </button>
+      </div>
     </form>
-  ) : (
-    <p>Loading component data...</p>
   );
 };
 
