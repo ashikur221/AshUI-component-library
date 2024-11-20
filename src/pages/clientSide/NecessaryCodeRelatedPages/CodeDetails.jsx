@@ -42,6 +42,8 @@ const CodeDetails = () => {
       <Helmet>
         <title>Code Details</title>
       </Helmet>
+      <p className="text-3xl bg-ashUi_primary font-bold text-center text-white py-5 mb-20">Necessary Codes</p>
+
       <div className="container mx-auto">
         {/* Component Name */}
         <p className="text-4xl my-5 font-bold text-ashUi_primary text-center">

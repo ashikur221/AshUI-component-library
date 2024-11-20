@@ -10,24 +10,38 @@ import { Helmet } from "react-helmet-async";
 
 const UpdateComponentForm = () => {
   const [componentCode, setComponentCode] = useState("");
+  const [componentData, setComponentData] = useState({
+    componentName: "",
+    componentDescription: "",
+    imageUrl: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
 
+  // Fetch the component data
   const { data: component = {}, isFetched } = useQuery({
-    queryKey: ["component"],
+    queryKey: ["component", id],
     queryFn: async () => {
       const res = await axiosPublic.get(`/component/${id}`);
       return res.data;
     },
+    enabled: !!id, // Only fetch when `id` is available
   });
 
+  // Set initial values when the component data is fetched
   useEffect(() => {
-    if (isFetched && component?.componentCode) {
-      setComponentCode(component.componentCode); // Initialize code when data is fetched
+    if (isFetched && component?.componentName) {
+      setComponentData({
+        componentName: component.componentName || "",
+        componentDescription: component.componentDescription || "",
+        imageUrl: component.imageUrl || "",
+      });
+      setComponentCode(component.componentCode || ""); // Set initial code
     }
-  }, [isFetched, component?.componentCode]);
+  }, [isFetched, component]);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -36,17 +50,16 @@ const UpdateComponentForm = () => {
     const image = form.image.files[0];
     const componentDescription = form.componentDescription.value;
 
-    let imageUrl = component?.imageUrl;
-    if (!image?.name) {
-      imageUrl = component?.imageUrl;
-    } else {
+    // If a new image is uploaded, upload it and get the URL
+    let imageUrl = componentData.imageUrl;
+    if (image?.name) {
       imageUrl = await uploadImg(image);
     }
 
     const data = {
       componentName,
       componentDescription,
-      componentCode: componentCode || component?.componentCode, // Keep original if unchanged
+      componentCode: componentCode || component?.componentCode, // Keep original code if unchanged
       imageUrl,
     };
 
@@ -79,11 +92,12 @@ const UpdateComponentForm = () => {
             <label className="block font-semibold text-gray-700">Component Name:</label>
             <input
               type="text"
-              defaultValue={component?.componentName}
+              value={componentData.componentName} // Controlled input
               name="componentName"
               placeholder="Enter component name"
               className="mt-1 w-full p-2 border border-gray-300 rounded"
               required
+              onChange={(e) => setComponentData({ ...componentData, componentName: e.target.value })}
             />
           </div>
 
@@ -101,7 +115,7 @@ const UpdateComponentForm = () => {
             <div className="avatar">
               <p>Already uploaded image:</p>
               <div className="w-12 rounded">
-                <img src={component?.imageUrl} alt="Component Preview" />
+                <img src={componentData.imageUrl} alt="Component Preview" />
               </div>
             </div>
           </div>
@@ -109,22 +123,23 @@ const UpdateComponentForm = () => {
           <div>
             <label className="block font-semibold text-gray-700">Description:</label>
             <textarea
-              defaultValue={component?.componentDescription}
+              value={componentData.componentDescription} // Controlled input
               name="componentDescription"
               placeholder="Enter component description"
               className="mt-1 w-full p-2 border border-gray-300 rounded"
               rows="7"
+              onChange={(e) => setComponentData({ ...componentData, componentDescription: e.target.value })}
             />
           </div>
 
           <div>
             <label className="block font-semibold text-gray-700">Code:</label>
             <CodeMirror
-              value={componentCode}
+              value={componentCode} // Controlled by state
               height="200px"
               extensions={[javascript()]}
               theme="light"
-              onChange={(value) => setComponentCode(value)} // Update only on user change
+              onChange={(value) => setComponentCode(value)} // Update code on change
               className="border border-gray-300 rounded"
             />
           </div>
