@@ -1,33 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
+import useAxiosPublic from '../../../hooks/useAxiosPublic';
 
-const Component = () => {
+const CodeComponent = () => {
   window.scrollTo(0, 0);
   const axiosPublic = useAxiosPublic();
   const { data: components = [] } = useQuery({
     queryKey: ['components'],
     queryFn: async () => {
-      const res = await axiosPublic.get('/component');
+      const res = await axiosPublic.get('/necessaryCode');
       return res.data;
     }
   })
   return (
     <div>
       <Helmet>
-        <title>AshUi | Frontend Components</title>
+        <title>AshUi | Necessary Codes</title>
       </Helmet>
-      <p className="text-3xl bg-ashUi_primary font-bold text-center text-white py-5 mb-20">Frontend Related Component</p>
-
-      <div className="container mx-auto my-5 border p-10 rounded-lg shadow-lg">
+      <p className="text-3xl bg-ashUi_primary font-bold text-center text-white py-5 mb-20">Necessary Codes</p>
+      <div className="container mx-auto my-5 border rounded-lg shadow-lg p-10">
         <div className="hidden lg:flex justify-between mb-3">
           <div className="w-1/4">
-            <p className="font-bold text-3xl">Name</p>
+            <p className="font-bold text-3xl">Functionality</p>
           </div>
           <div className="w-3/4">
-            <p className="font-bold text-3xl">Component Description</p>
+            <p className="font-bold text-3xl">Code Description</p>
           </div>
         </div>
 
@@ -46,7 +45,7 @@ const Component = () => {
               </div>
               <div className="border rounded-r-md lg:w-3/4 p-6 flex justify-between items-center">
                 <p className="m-2 w-3/4">{component?.componentDescription}</p>
-                <Link to={`/component-details/${component._id}`}>
+                <Link to={`/code-details/${component._id}`}>
                   <button className='btn btn-primary'>See Details</button>
                 </Link>
               </div>
@@ -60,4 +59,4 @@ const Component = () => {
   );
 };
 
-export default Component;
+export default CodeComponent;

@@ -96,20 +96,17 @@ const Navbar = () => {
         <>
 
             <NavLink to="/components" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
-                Components
+               Frontend Page Components
             </NavLink>
 
 
-            <NavLink to="/" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
-                Templates
+            <NavLink to="/necessary-code" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
+                Necessary Codes
             </NavLink>
             
-            <NavLink to="/" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
-                Pricing
-            </NavLink>
-
+            
             {/* Products Dropdown Toggle */}
-            <p
+            {/* <p
                 onClick={handleDropdownToggle}
                 className={`${NavLinkStyle} transition-all duration-300 flex justify-between items-center cursor-pointer`}
             >
@@ -117,10 +114,10 @@ const Navbar = () => {
                 <span className={`transition-all duration-300 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}>
                     <IoMdArrowDropdown />
                 </span>
-            </p>
+            </p> */}
 
             {/* Products Dropdown Menu */}
-            <div
+            {/* <div
                 className={`absolute border mx-auto top-12 left-20 rounded-md bg-white transition-all origin-top duration-300 ${isDropdownOpen ? 'block scale-y-100 p-2' : 'scale-y-0 h-0'
                     }`}
                 style={{ width: '200px', minWidth: '400px', maxWidth: '400px' }} // Adjust width if needed
@@ -143,10 +140,10 @@ const Navbar = () => {
                         </NavLink>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             {/* Services Dropdown Toggle */}
-            <p
+            {/* <p
                 onClick={handleDropdownToggle2}
                 className={`${NavLinkStyle} transition-all duration-300 flex justify-between items-center cursor-pointer`}
             >
@@ -154,10 +151,10 @@ const Navbar = () => {
                 <span className={`transition-all duration-300 ${isDropdownOpen2 ? 'rotate-180' : 'rotate-0'}`}>
                     <IoMdArrowDropdown />
                 </span>
-            </p>
+            </p> */}
 
             {/* Services Dropdown Menu */}
-            <div
+            {/* <div
                 className={`absolute border mx-auto top-10 left-56 rounded-md bg-white transition-all origin-top duration-300 ${isDropdownOpen2 ? 'block scale-y-100 p-2' : 'scale-y-0 h-0'
                     }`}
                 style={{ width: '200px', minWidth: '400px', maxWidth: '400px' }} // Adjust width if needed
@@ -179,14 +176,14 @@ const Navbar = () => {
                         </NavLink>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
-            <NavLink to="/aboutUs" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
-                Portfolio
+            <NavLink to="/admin-components" onClick={handleHideDrawer} className={`${NavLinkStyle} `}>
+                Admin Pannel Components
             </NavLink>
 
             {/* Get in Touch Dropdown Toggle */}
-            <p
+            {/* <p
                 onClick={handleDropdownToggle3}
                 className={`${NavLinkStyle} transition-all duration-300 flex justify-between items-center cursor-pointer`}
             >
@@ -194,10 +191,10 @@ const Navbar = () => {
                 <span className={`transition-all duration-300 ${isGetInTouchOpen ? 'rotate-180' : 'rotate-0'}`}>
                     <IoMdArrowDropdown />
                 </span>
-            </p>
+            </p> */}
 
             {/* Get in Touch Dropdown Menu */}
-            <div
+            {/* <div
                 className={`absolute border mx-auto top-10 left-[470px] rounded-md bg-white transition-all origin-top duration-300 ${isGetInTouchOpen ? 'block scale-y-100 p-2' : 'scale-y-0 h-0'
                     }`}
                 style={{ width: '80px', minWidth: '150px', maxWidth: '150px' }} // Adjust width if needed
@@ -226,7 +223,7 @@ const Navbar = () => {
 
                 </div>
 
-            </div>
+            </div> */}
 
         </>
     );

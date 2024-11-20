@@ -13,7 +13,7 @@ const NavigationItem = ({ to, icon: Icon, label }) => {
     <li>
       <Link
         to={to}
-        className={`flex items-center px-4 py-2 rounded-md hover:bg-gray-300 focus:bg-white focus:text-black active:bg-black active:text-white ${isActive ? 'bg-white text-black' : ''
+        className={`flex items-center px-4 py-2 m-2 rounded-md hover:bg-gray-300 focus:bg-white focus:text-black active:bg-black active:text-white ${isActive ? 'bg-white text-black' : ''
           }`}
       >
         <Icon className="mr-2" />

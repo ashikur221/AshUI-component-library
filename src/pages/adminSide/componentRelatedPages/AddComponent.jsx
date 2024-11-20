@@ -38,6 +38,7 @@ const AddComponent = ({ onSubmit }) => {
           showConfirmButton: false,
           timer: 1500,
         });
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err.message);

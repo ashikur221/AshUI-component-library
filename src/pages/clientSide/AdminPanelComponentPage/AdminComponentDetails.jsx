@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css'; // Prism.js CSS for code styling
-import useAxiosPublic from '../../../hooks/useAxiosPublic';
+
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import { Helmet } from 'react-helmet-async';
 
-const ComponentDetails = () => {
+const AdminComponentDetails = () => {
   window.scrollTo(0, 0);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
@@ -16,7 +17,7 @@ const ComponentDetails = () => {
   const { data: component = {} } = useQuery({
     queryKey: ['component'],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/component/${id}`);
+      const res = await axiosPublic.get(`/backendComponent/${id}`);
       return res.data;
     }
   });
@@ -39,7 +40,7 @@ const ComponentDetails = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Frontend Component Details</title>
+        <title>Admin Panel Component Details</title>
       </Helmet>
       <div className="container mx-auto">
         {/* Component Name */}
@@ -47,7 +48,7 @@ const ComponentDetails = () => {
           {component?.componentName}
         </p>
 
-        
+
 
         <div className="">
           <img src={component?.imageUrl} alt="" />
@@ -83,4 +84,4 @@ const ComponentDetails = () => {
   );
 };
 
-export default ComponentDetails;
+export default AdminComponentDetails;

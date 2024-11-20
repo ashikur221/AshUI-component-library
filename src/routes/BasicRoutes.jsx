@@ -14,6 +14,16 @@ import AddComponent from "../pages/adminSide/componentRelatedPages/AddComponent"
 import ManageComponent from "../pages/adminSide/componentRelatedPages/ManageComponent";
 import UpdateComponentForm from "../pages/adminSide/componentRelatedPages/UpdateComponentForm";
 import ComponentDetails from "../pages/clientSide/ComponentPage/ComponentDetails";
+import AddBackendComponent from "../pages/adminSide/backendComponentRelatedPages/AddBackendComponent";
+import ManageBackendComponents from "../pages/adminSide/backendComponentRelatedPages/ManageBackendComponents";
+import UpdateBackendComponent from "../pages/adminSide/backendComponentRelatedPages/UpdateBackendComponent";
+import AdminComponent from "../pages/clientSide/AdminPanelComponentPage/AdminComponent";
+import AdminComponentDetails from "../pages/clientSide/AdminPanelComponentPage/AdminComponentDetails";
+import AddCode from "../pages/adminSide/necessaryCodeRelatedPages/AddCode";
+import ManageCode from "../pages/adminSide/necessaryCodeRelatedPages/ManageCode";
+import UpdateCode from "../pages/adminSide/necessaryCodeRelatedPages/UpdateCode";
+import CodeComponent from "../pages/clientSide/NecessaryCodeRelatedPages/CodeComponent";
+import CodeDetails from "../pages/clientSide/NecessaryCodeRelatedPages/CodeDetails";
 
 
 
@@ -33,6 +43,25 @@ const router = createBrowserRouter([
       {
         path: "/component-details/:id",
         element: <ComponentDetails></ComponentDetails>
+      },
+      // admin pannel related routes
+
+      {
+        path: "/admin-components",
+        element: <AdminComponent></AdminComponent>
+      },
+      {
+        path: "/admin-component-details/:id",
+        element: <AdminComponentDetails></AdminComponentDetails>
+      },
+      // necessary code related routes 
+      {
+        path: "/necessary-code",
+        element: <CodeComponent></CodeComponent>
+      },
+      {
+        path: "/code-details/:id",
+        element: <CodeDetails></CodeDetails>
       }
     ]
   },
@@ -63,6 +92,33 @@ const router = createBrowserRouter([
       {
         path: "update-component/:id",
         element: <UpdateComponentForm></UpdateComponentForm>
+      },
+
+      // backend Component related routes 
+      {
+        path: "add-backendComponent",
+        element: <AddBackendComponent></AddBackendComponent>
+      },
+      {
+        path: "manage-backendComponent",
+        element: <ManageBackendComponents></ManageBackendComponents>
+      },
+      {
+        path: "update-backendComponent/:id",
+        element: <UpdateBackendComponent></UpdateBackendComponent>
+      },
+      // necessary code related routes 
+      {
+        path: "add-code",
+        element: <AddCode></AddCode>
+      },
+      {
+        path: "manage-code",
+        element: <ManageCode></ManageCode>
+      },
+      {
+        path: "update-code/:id",
+        element: <UpdateCode></UpdateCode>
       }
     ]
   }

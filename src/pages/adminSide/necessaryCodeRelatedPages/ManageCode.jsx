@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import ComponentManagementTable from "./ComponentManagementTable";
-import useAxiosPublic from "../../../hooks/useAxiosPublic";
+
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
-const ManageComponent = () => {
+import CodeTable from "./CodeTable";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+
+const ManageCode = () => {
 
   const axiosPublic = useAxiosPublic();
   const { data: components = [], refetch } = useQuery({
     queryKey: ['allcomponent'],
     queryFn: async () => {
-      const res = await axiosPublic.get('/component');
+      const res = await axiosPublic.get('/necessaryCode');
       return res.data;
     }
   })
 
-  
+  console.log(components);
+
+
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -29,7 +33,7 @@ const ManageComponent = () => {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        axiosPublic.delete(`/component/${id}`)
+        axiosPublic.delete(`/necessaryCode/${id}`)
           .then(res => {
             if (res.data.deletedCount > 0) {
               Swal.fire({
@@ -48,14 +52,14 @@ const ManageComponent = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Manage Components</h2>
-      <ComponentManagementTable
+      <h2 className="text-xl font-semibold mb-4">Manage Code</h2>
+      <CodeTable
         components={components}
-        
+
         onDelete={handleDelete}
       />
     </div>
   );
 };
 
-export default ManageComponent;
+export default ManageCode;

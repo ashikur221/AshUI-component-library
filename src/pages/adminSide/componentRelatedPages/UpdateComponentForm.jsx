@@ -40,12 +40,12 @@ const UpdateComponentForm = () => {
     console.log(data);
 
     try {
-      const res = await axiosPublic.post('/component', data);
+      const res = await axiosPublic.put(`/component/${id}`, data);
       if (res) {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Your component has been added.",
+          title: "Your component has been updated.",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -124,10 +124,10 @@ const UpdateComponentForm = () => {
           {isLoading ? (
             <div className="flex items-center justify-center space-x-2">
               <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-opacity-75"></span>
-              <span>Uploading...</span>
+              <span>Updating...</span>
             </div>
           ) : (
-            "Add Component"
+            "Update Component"
           )}
         </button>
       </div>
