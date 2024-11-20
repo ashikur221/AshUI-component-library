@@ -4,6 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { Helmet } from "react-helmet-async";
 
 const AddBackendComponent = ({ onSubmit }) => {
   const [componentName, setComponentName] = useState("");
@@ -53,7 +54,9 @@ const AddBackendComponent = ({ onSubmit }) => {
 
   return (
     <>
-      
+      <Helmet>
+        <title>Dashboard | Add Backend Component</title>
+      </Helmet>
       <p className="text-3xl font-bold text-center my-4">Add Backend Component</p>
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
         <div className="grid lg:grid-cols-2 gap-4">

@@ -50,14 +50,16 @@ const CodeDetails = () => {
 
 
 
-        <div className="">
-          <img src={component?.imageUrl} alt="" />
-        </div>
-        <div className="mt-10">
-          <p className="text-3xl font-bold">Description</p>
-          <p className='my-5 text-xl'>
-            {component?.componentDescription}
-          </p>
+        <div className="grid grid-cols-2 gap-5">
+          <div className="">
+            <img src={component?.imageUrl} alt="" className='w-full rounded-2xl shadow-lg border' />
+          </div>
+          <div className="border p-10 rounded-2xl">
+            <p className="text-3xl font-bold">Description</p>
+            <p className='my-5 text-xl'>
+              {component?.componentDescription}
+            </p>
+          </div>
         </div>
 
         {/* Code Display Section */}
@@ -73,7 +75,7 @@ const CodeDetails = () => {
           </div>
 
           {/* Display code for syntax highlighting */}
-          <pre>
+          <pre className='rounded-lg border'>
             <code className="language-js">
               {component?.componentCode}
             </code>

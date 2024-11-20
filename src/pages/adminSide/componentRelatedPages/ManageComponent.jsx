@@ -3,6 +3,7 @@ import ComponentManagementTable from "./ComponentManagementTable";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const ManageComponent = () => {
 
@@ -48,6 +49,9 @@ const ManageComponent = () => {
 
   return (
     <div className="p-6">
+      <Helmet>
+        <title>Dashboard | Manage Frontend Component</title>
+      </Helmet>
       <h2 className="text-xl font-semibold mb-4">Manage Components</h2>
       <ComponentManagementTable
         components={components}

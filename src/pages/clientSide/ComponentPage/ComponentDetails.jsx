@@ -47,20 +47,22 @@ const ComponentDetails = () => {
           {component?.componentName}
         </p>
 
-        
 
-        <div className="">
-          <img src={component?.imageUrl} alt="" />
-        </div>
-        <div className="mt-10">
-          <p className="text-3xl font-bold">Description</p>
-          <p className='my-5 text-xl'>
-            {component?.componentDescription}
-          </p>
+
+        <div className="grid grid-cols-2 gap-5">
+          <div className="">
+            <img src={component?.imageUrl} alt="" className='rounded-2xl shadow-lg w-full border' />
+          </div>
+          <div className="p-10 rounded-2xl  border">
+            <p className="text-3xl font-bold">Description</p>
+            <p className='my-5 text-xl'>
+              {component?.componentDescription}
+            </p>
+          </div>
         </div>
 
         {/* Code Display Section */}
-        <section className="code my-10">
+        <section className="code my-10 ">
           {/* Copy Code Button */}
           <div className="flex justify-end">
             <button
@@ -72,7 +74,7 @@ const ComponentDetails = () => {
           </div>
 
           {/* Display code for syntax highlighting */}
-          <pre>
+          <pre className='border rounded-lg'>
             <code className="language-js">
               {component?.componentCode}
             </code>

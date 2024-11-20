@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const UpdateBackendComponent = () => {
 
@@ -13,13 +14,19 @@ const UpdateBackendComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
-  const { data: component = {} } = useQuery({
+  const { data: component = {}, isFetched } = useQuery({
     queryKey: ['component'],
     queryFn: async () => {
       const res = await axiosPublic.get(`/backendComponent/${id}`);
       return res.data;
     }
-  })
+  });
+
+  useEffect(() => {
+    if (isFetched && component?.componentCode) {
+      setComponentCode(component.componentCode);
+    }
+  }, [isFetched, component?.componentCode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +43,12 @@ const UpdateBackendComponent = () => {
       imageUrl = await uploadImg(image);
     }
 
-    const data = { componentName, componentDescription, componentCode, imageUrl };
+    const data = {
+      componentName,
+      componentDescription,
+      componentCode: componentCode || component?.componentCode,
+      imageUrl
+    };
     console.log(data);
 
     try {
@@ -62,6 +74,9 @@ const UpdateBackendComponent = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Dashboard | Update Backend Component</title>
+      </Helmet>
       <p className="text-3xl font-bold text-center my-4">Update Backend Component</p>
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
         <div className="grid lg:grid-cols-2 gap-4">

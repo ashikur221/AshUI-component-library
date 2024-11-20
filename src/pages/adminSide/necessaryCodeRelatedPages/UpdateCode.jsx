@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
@@ -13,13 +13,19 @@ const UpdateCode = () => {
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
-  const { data: component = {} } = useQuery({
+  const { data: component = {}, isFetched } = useQuery({
     queryKey: ['component'],
     queryFn: async () => {
       const res = await axiosPublic.get(`/necessaryCode/${id}`);
       return res.data;
     }
   })
+
+  useEffect(() => {
+    if (isFetched && component?.componentCode) {
+      setComponentCode(component.componentCode);
+    }
+  }, [isFetched, component?.componentCode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +42,12 @@ const UpdateCode = () => {
       imageUrl = await uploadImg(image);
     }
 
-    const data = { componentName, componentDescription, componentCode, imageUrl };
+    const data = {
+      componentName,
+      componentDescription,
+      componentCode: componentCode || component?.componentCode,
+      imageUrl
+    };
     console.log(data);
 
     try {

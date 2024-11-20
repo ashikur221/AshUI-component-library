@@ -4,6 +4,7 @@ import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import { FaCode } from "react-icons/fa";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { BiSolidComponent } from "react-icons/bi";
+import { Helmet } from "react-helmet-async";
 
 const Dashboard = () => {
   const axiosPublic = useAxiosPublic();
@@ -33,6 +34,9 @@ const Dashboard = () => {
 
   return (
     <div className="  min-h-screen">
+      <Helmet>
+        <title>Dashboard | AshUi</title>
+      </Helmet>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-6">
         {/* Total Components Card */}
