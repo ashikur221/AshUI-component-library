@@ -4,23 +4,25 @@ import { javascript } from "@codemirror/lang-javascript";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 const UpdateCode = () => {
-
   const [componentCode, setComponentCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
+  const queryClient = useQueryClient();
+
   const { data: component = {}, isFetched } = useQuery({
-    queryKey: ['component'],
+    queryKey: ['component', id],  // Dependency on the 'id' parameter
     queryFn: async () => {
       const res = await axiosPublic.get(`/necessaryCode/${id}`);
       return res.data;
-    }
-  })
+    },
+    enabled: !!id, // Ensure the query runs only when 'id' is available
+  });
 
   useEffect(() => {
     if (isFetched && component?.componentCode) {
@@ -47,7 +49,7 @@ const UpdateCode = () => {
       componentName,
       componentDescription,
       componentCode: componentCode || component?.componentCode,
-      imageUrl
+      imageUrl,
     };
     console.log(data);
 
@@ -61,13 +63,13 @@ const UpdateCode = () => {
           showConfirmButton: false,
           timer: 1500,
         });
+
+        // Invalidate the query to refetch updated data
+        queryClient.invalidateQueries(['component', id]); // Pass the 'id' to invalidate the specific query
       }
     } catch (err) {
       console.log(err.message);
     } finally {
-
-      setComponentCode("");
-
       setIsLoading(false);
     }
   };
@@ -97,7 +99,7 @@ const UpdateCode = () => {
           <div className="p-2 w-full">
             <div className="relative">
               <label className="leading-7 text-sm text-gray-600 font-bold">Graphical Representation</label><br />
-              <input type="file" name='image' className="file-input file-input-bordered file-input-md w-full" />
+              <input type="file" name="image" className="file-input file-input-bordered file-input-md w-full" />
             </div>
             <div className="avatar">
               <p>Already uploaded image:</p>
@@ -121,7 +123,7 @@ const UpdateCode = () => {
           <div>
             <label className="block font-semibold text-gray-700">Code:</label>
             <CodeMirror
-              value={component?.componentCode}
+              value={componentCode}  // Controlled by state to reflect updates
               height="200px"
               extensions={[javascript()]}
               theme="light"
@@ -129,8 +131,6 @@ const UpdateCode = () => {
               className="border border-gray-300 rounded"
             />
           </div>
-
-
         </div>
 
         <div className="w-1/4 mx-auto">

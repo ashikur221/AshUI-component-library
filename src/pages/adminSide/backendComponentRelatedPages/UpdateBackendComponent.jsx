@@ -4,30 +4,35 @@ import { javascript } from "@codemirror/lang-javascript";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 const UpdateBackendComponent = () => {
-
   const [componentCode, setComponentCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
+  const queryClient = useQueryClient();
+
+  // Fetch data for the specific backend component
   const { data: component = {}, isFetched } = useQuery({
-    queryKey: ['component'],
+    queryKey: ['backendComponent', id], // Use 'id' in queryKey to ensure the cache is specific to the current component
     queryFn: async () => {
       const res = await axiosPublic.get(`/backendComponent/${id}`);
       return res.data;
-    }
+    },
+    enabled: !!id, // Ensures that the query only runs when 'id' is available
   });
 
+  // Set the initial value of the componentCode
   useEffect(() => {
     if (isFetched && component?.componentCode) {
       setComponentCode(component.componentCode);
     }
   }, [isFetched, component?.componentCode]);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -37,21 +42,20 @@ const UpdateBackendComponent = () => {
     const componentDescription = form.componentDescription.value;
 
     let imageUrl = component?.imageUrl;
-    if (!image?.name) {
-      imageUrl = component?.imageUrl;
-    } else {
-      imageUrl = await uploadImg(image);
+    if (image?.name) {
+      imageUrl = await uploadImg(image);  // Upload the new image if selected
     }
 
     const data = {
       componentName,
       componentDescription,
-      componentCode: componentCode || component?.componentCode,
-      imageUrl
+      componentCode: componentCode || component?.componentCode, // Use local state or existing component code
+      imageUrl,
     };
     console.log(data);
 
     try {
+      // Send the update request to the backend
       const res = await axiosPublic.put(`/backendComponent/${id}`, data);
       if (res) {
         Swal.fire({
@@ -61,13 +65,13 @@ const UpdateBackendComponent = () => {
           showConfirmButton: false,
           timer: 1500,
         });
+
+        // Invalidate the query to refetch the updated data after successful update
+        queryClient.invalidateQueries(['backendComponent', id]);
       }
     } catch (err) {
       console.log(err.message);
     } finally {
-
-      setComponentCode("");
-
       setIsLoading(false);
     }
   };
@@ -91,11 +95,11 @@ const UpdateBackendComponent = () => {
               required
             />
           </div>
-          {/* image url  */}
+          {/* Image URL */}
           <div className="p-2 w-full">
             <div className="relative">
               <label className="leading-7 text-sm text-gray-600 font-bold">Component Image</label><br />
-              <input type="file" name='image' className="file-input file-input-bordered file-input-md w-full" />
+              <input type="file" name="image" className="file-input file-input-bordered file-input-md w-full" />
             </div>
             <div className="avatar">
               <p>Already uploaded image:</p>
@@ -119,23 +123,20 @@ const UpdateBackendComponent = () => {
           <div>
             <label className="block font-semibold text-gray-700">Code:</label>
             <CodeMirror
-              value={component?.componentCode}
+              value={componentCode}  // Controlled by state
               height="200px"
               extensions={[javascript()]}
               theme="light"
-              onChange={(value) => setComponentCode(value)}
+              onChange={(value) => setComponentCode(value)} // Update componentCode on change
               className="border border-gray-300 rounded"
             />
           </div>
-
-
         </div>
 
         <div className="w-1/4 mx-auto">
           <button
             type="submit"
-            className={`w-full py-2 px-4 rounded ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              } text-white transition`}
+            className={`w-full py-2 px-4 rounded ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} text-white transition`}
             disabled={isLoading}
           >
             {isLoading ? (
