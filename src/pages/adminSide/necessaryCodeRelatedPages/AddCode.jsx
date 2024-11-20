@@ -4,6 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { Helmet } from "react-helmet-async";
 
 const AddCode = ({ onSubmit }) => {
   const [componentName, setComponentName] = useState("");
@@ -54,6 +55,11 @@ const AddCode = ({ onSubmit }) => {
   return (
     <>
 
+      <Helmet>
+        <title>
+          Dashboard | Add Necessary Code
+        </title>
+      </Helmet>
       <p className="text-3xl font-bold text-center my-4">Add Necessary Code</p>
       
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const UpdateCode = () => {
 
@@ -73,6 +74,11 @@ const UpdateCode = () => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          Dashboard | Update Necessary Code
+        </title>
+      </Helmet>
       <p className="text-3xl font-bold text-center my-4">Update Code</p>
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
         <div className="grid lg:grid-cols-2 gap-4">

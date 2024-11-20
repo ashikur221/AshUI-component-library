@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 import CodeTable from "./CodeTable";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { Helmet } from "react-helmet-async";
 
 const ManageCode = () => {
 
@@ -52,6 +53,11 @@ const ManageCode = () => {
 
   return (
     <div className="p-6">
+      <Helmet>
+        <title>
+          Dashboard | Manage Necessary Code
+        </title>
+      </Helmet>
       <h2 className="text-xl font-semibold mb-4">Manage Code</h2>
       <CodeTable
         components={components}
