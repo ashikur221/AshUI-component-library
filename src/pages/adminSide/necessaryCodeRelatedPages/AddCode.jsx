@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { uploadImg } from "../../../uploadFile/UploadImg";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import { Helmet } from "react-helmet-async";
+import { useQuery } from "@tanstack/react-query";
 
 const AddCode = ({ onSubmit }) => {
   const [componentName, setComponentName] = useState("");
@@ -14,10 +15,20 @@ const AddCode = ({ onSubmit }) => {
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
 
+
+  const { data: contents = [], refetch } = useQuery({
+    queryKey: ['allData'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/codeCategory');
+      return res.data;
+    }
+  })
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     const form = e.target;
+    const category = form.category.value;
     const image = form.image.files[0];
 
     let imageUrl = '';
@@ -27,13 +38,13 @@ const AddCode = ({ onSubmit }) => {
       imageUrl = await uploadImg(image);
     }
 
-    const data = { componentName, componentDescription, componentCode, imageUrl };
+    const data = { componentName, category, componentDescription, componentCode, imageUrl };
 
     try {
       const res = await axiosPublic.post('/necessaryCode', data);
       if (res) {
         Swal.fire({
-          position: "top-end",
+          position: "center",
           icon: "success",
           title: "Your Code has been added.",
           showConfirmButton: false,
@@ -61,9 +72,9 @@ const AddCode = ({ onSubmit }) => {
         </title>
       </Helmet>
       <p className="text-3xl font-bold text-center my-4">Add Necessary Code</p>
-      
+
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
-        <div className="grid lg:grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-3 gap-4">
           <div>
             <label className="block font-semibold text-gray-700">Functionality:</label>
             <input
@@ -76,13 +87,29 @@ const AddCode = ({ onSubmit }) => {
             />
           </div>
           {/* image url  */}
-          <div className="p-2 w-full">
+          <div className=" w-full">
             <div className="relative">
-              <label className="leading-7 text-sm text-gray-600 font-bold">Graphical Representation</label><br />
+              <label className=" text-sm text-gray-600 font-bold">Graphical Representation</label><br />
               <input type="file" name='image' className="file-input file-input-bordered file-input-md w-full" />
             </div>
           </div>
 
+          <div className="">
+            <label className=" text-sm text-gray-600 font-bold">Code Category</label><br />
+            <select name="category" className="select select-info w-full ">
+              <option disabled selected>Select Category</option>
+              {
+                contents?.map(content => <option value={content?.category}>{content?.category}</option>)
+              }
+            </select>
+          </div>
+
+         
+
+
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-4">
           <div>
             <label className="block font-semibold text-gray-700">Description:</label>
             <textarea
@@ -105,8 +132,6 @@ const AddCode = ({ onSubmit }) => {
               className="border border-gray-300 rounded"
             />
           </div>
-
-
         </div>
 
         <div className="w-1/4 mx-auto">

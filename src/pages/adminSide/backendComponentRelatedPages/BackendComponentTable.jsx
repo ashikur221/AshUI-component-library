@@ -9,7 +9,7 @@ const BackendComponentTable = ({ components, onDelete }) => {
           <tr>
             <th className="py-2 px-4 border-b font-semibold text-gray-700">#</th>
             <th className="py-2 px-4 border-b font-semibold text-gray-700">Component Name</th>
-            <th className="py-2 px-4 border-b font-semibold text-gray-700">Description</th>
+            <th className="py-2 px-4 border-b font-semibold text-gray-700">Category</th>
             <th className="py-2 px-4 border-b font-semibold text-gray-700">Actions</th>
           </tr>
         </thead>
@@ -18,7 +18,7 @@ const BackendComponentTable = ({ components, onDelete }) => {
             <tr key={index} className="hover:bg-gray-100 text-center">
               <td className="py-2 px-4 border-b text-gray-800">{index + 1}</td>
               <td className="py-2 px-4 border-b text-gray-800">{component.componentName}</td>
-              <td className="py-2 px-4 border-b text-gray-600">{component.componentDescription}</td>
+              <td className="py-2 px-4 border-b text-gray-600">{component.category}</td>
 
               <td className="py-2 px-4 border-b text-center">
 

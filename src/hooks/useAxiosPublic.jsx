@@ -1,5 +1,5 @@
 import axios from "axios";
-const backendURL = 'https://ash-ui-server.vercel.app'
+const backendURL = 'https://ash-ui-server-sandy.vercel.app'
 // const backendURL = 'http://localhost:5000'
 const axiosPublic = axios.create({
   baseURL: backendURL

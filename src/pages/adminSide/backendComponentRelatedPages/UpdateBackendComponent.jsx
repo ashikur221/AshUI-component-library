@@ -15,6 +15,15 @@ const UpdateBackendComponent = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
+
+  const { data: contents = [], refetch } = useQuery({
+    queryKey: ['allData'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/backCategory');
+      return res.data;
+    }
+  })
+
   // Fetch data for the specific backend component
   const { data: component = {}, isFetched } = useQuery({
     queryKey: ['backendComponent', id], // Use 'id' in queryKey to ensure the cache is specific to the current component
@@ -38,6 +47,7 @@ const UpdateBackendComponent = () => {
     setIsLoading(true);
     const form = e.target;
     const componentName = form.componentName.value;
+    const category = form.category.value;
     const image = form.image.files[0];
     const componentDescription = form.componentDescription.value;
 
@@ -48,6 +58,7 @@ const UpdateBackendComponent = () => {
 
     const data = {
       componentName,
+      category,
       componentDescription,
       componentCode: componentCode || component?.componentCode, // Use local state or existing component code
       imageUrl,
@@ -83,7 +94,7 @@ const UpdateBackendComponent = () => {
       </Helmet>
       <p className="text-3xl font-bold text-center my-4">Update Backend Component</p>
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
-        <div className="grid lg:grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-3 gap-4">
           <div>
             <label className="block font-semibold text-gray-700">Component Name:</label>
             <input
@@ -96,9 +107,9 @@ const UpdateBackendComponent = () => {
             />
           </div>
           {/* Image URL */}
-          <div className="p-2 w-full">
+          <div className=" w-full">
             <div className="relative">
-              <label className="leading-7 text-sm text-gray-600 font-bold">Component Image</label><br />
+              <label className=" text-sm text-gray-600 font-bold">Component Image</label><br />
               <input type="file" name="image" className="file-input file-input-bordered file-input-md w-full" />
             </div>
             <div className="avatar">
@@ -108,6 +119,21 @@ const UpdateBackendComponent = () => {
               </div>
             </div>
           </div>
+
+          <div className="">
+            <label className=" text-sm text-gray-600 font-bold">Code Category</label><br />
+            <select name="category" className="select select-info w-full ">
+              <option disabled selected>Select Category</option>
+              {
+                contents?.map(content => <option value={content?.category}>{content?.category}</option>)
+              }
+            </select>
+          </div>
+
+
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-4">
 
           <div>
             <label className="block font-semibold text-gray-700">Description:</label>
