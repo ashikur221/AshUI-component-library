@@ -1,57 +1,105 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
+import Card from '../../../components/clientSide/Card';
+import { MdOutlineCategory } from 'react-icons/md';
 
 const CodeComponent = () => {
   window.scrollTo(0, 0);
   const axiosPublic = useAxiosPublic();
+
+
+  // States for all components and filtered components
+  const [filteredData, setFilteredData] = useState([]);
+
+  // Fetch categories
+  const { data: contents = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/codeCategory');
+      return res.data;
+    }
+  });
+
+
+
   const { data: components = [] } = useQuery({
     queryKey: ['components'],
     queryFn: async () => {
       const res = await axiosPublic.get('/necessaryCode');
       return res.data;
+    },
+    onSuccess: (data) => {
+      setFilteredData(data);
     }
   })
+
+  // Handle filter 
+  const handleFilter = (category) => {
+    if (category === 'All') {
+      setFilteredData(components);
+    } else {
+      const filtered = components.filter((component) => component.category === category);
+      setFilteredData(filtered);
+    }
+  };
+
+
   return (
     <div>
       <Helmet>
         <title>AshUi | Necessary Codes</title>
       </Helmet>
       <p className="text-3xl bg-ashUi_primary font-bold text-center text-white py-5 mb-20">Necessary Codes</p>
-      <div className="container mx-auto my-5 border rounded-lg shadow-lg p-10">
-        <div className="hidden lg:flex justify-between mb-3">
-          <div className="w-1/4">
-            <p className="font-bold text-3xl">Functionality</p>
-          </div>
-          <div className="w-3/4">
-            <p className="font-bold text-3xl">Code Description</p>
+      <div className="container mx-auto ">
+
+        <div className="lg:flex flex-col justify-between items-center ">
+          <p className="font-bold text-4xl flex items-center gap-3"> <MdOutlineCategory />Category</p>
+
+          <div className="space-x-4 shadow-ashUi_secondary shadow-lg gap-4 my-4 border p-3 rounded-lg">
+            {/* "All" Button */}
+            <button
+              onClick={() => handleFilter('All')}
+              className="btn bg-ashUi_primary text-white"
+            >
+              All
+            </button>
+            {/* Dynamic category buttons */}
+            {contents?.map((content, index) => (
+              <button
+                key={index}
+                onClick={() => handleFilter(content?.category)}
+                className="btn bg-ashUi_primary text-white"
+              >
+                {content?.category}
+              </button>
+            ))}
           </div>
         </div>
 
-        {
-          components?.map(component =>
-            <div key={component._id} className="lg:flex justify-around mb-4 space-y-2 lg:space-y-0 shadow-sm">
-              <div className="border rounded-l-md lg:w-1/4 flex  items-center p-3">
-
-                <div className="avatar">
-                  <div className="w-24 rounded">
-
-                    <img src={component?.imageUrl} />
-                  </div>
-                </div>
-                <p className="m-4 font-semibold">{component?.componentName}</p>
-              </div>
-              <div className="border rounded-r-md lg:w-3/4 p-6 flex justify-between items-center">
-                <p className="m-2 w-3/4">{component?.componentDescription}</p>
-                <Link to={`/code-details/${component._id}`}>
-                  <button className='btn btn-primary'>See Details</button>
+        
+        {/* Component Section  */}
+        <div className=" p-3 rounded-lg my-12 border">
+          <div className="grid lg:grid-cols-4 gap-10">
+            {filteredData.length > 0 ? (
+              filteredData.map((component) => (
+                <Link key={component._id} to={`/code-details/${component._id}`}>
+                  <Card component={component} />
                 </Link>
-              </div>
-            </div>
-          )
-        }
+              ))
+            ) : (
+              components?.map((component) => (
+                <Link key={component._id} to={`/code-details/${component._id}`}>
+                  <Card component={component} />
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+
+
 
 
       </div>

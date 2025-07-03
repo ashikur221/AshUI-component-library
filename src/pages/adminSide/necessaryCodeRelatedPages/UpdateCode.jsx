@@ -15,6 +15,14 @@ const UpdateCode = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
+  const { data: contents = [], refetch } = useQuery({
+    queryKey: ['allData'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/codeCategory');
+      return res.data;
+    }
+  })
+
   const { data: component = {}, isFetched } = useQuery({
     queryKey: ['component', id],  // Dependency on the 'id' parameter
     queryFn: async () => {
@@ -83,7 +91,7 @@ const UpdateCode = () => {
       </Helmet>
       <p className="text-3xl font-bold text-center my-4">Update Code</p>
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
-        <div className="grid lg:grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-3 gap-4">
           <div>
             <label className="block font-semibold text-gray-700">Functionality:</label>
             <input
@@ -96,9 +104,9 @@ const UpdateCode = () => {
             />
           </div>
           {/* image url  */}
-          <div className="p-2 w-full">
+          <div className=" w-full">
             <div className="relative">
-              <label className="leading-7 text-sm text-gray-600 font-bold">Graphical Representation</label><br />
+              <label className=" text-sm text-gray-600 font-bold">Graphical Representation</label><br />
               <input type="file" name="image" className="file-input file-input-bordered file-input-md w-full" />
             </div>
             <div className="avatar">
@@ -109,6 +117,20 @@ const UpdateCode = () => {
             </div>
           </div>
 
+          <div className="">
+            <label className=" text-sm text-gray-600 font-bold">Code Category</label><br />
+            <select name="category" className="select select-info w-full ">
+              <option disabled selected>Select Category</option>
+              {
+                contents?.map(content => <option value={content?.category}>{content?.category}</option>)
+              }
+            </select>
+          </div>
+
+
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-4">
           <div>
             <label className="block font-semibold text-gray-700">Description:</label>
             <textarea

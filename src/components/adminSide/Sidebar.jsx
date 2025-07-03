@@ -52,18 +52,21 @@ const Sidebar = () => {
     <>
       <NavigationItem to="/dashboard/add-component" icon={MdAddCircle} label="Add Components" />
       <NavigationItem to="/dashboard/manage-component" icon={SiNginxproxymanager} label="Manage Components" />
+      <NavigationItem to="/dashboard/add-front-category" icon={SiNginxproxymanager} label="Manage Category" />
     </>
 
   const backendComponentUrls =
     <>
       <NavigationItem to="/dashboard/add-backendComponent" icon={MdAddCircle} label="Add Components" />
       <NavigationItem to="/dashboard/manage-backendComponent" icon={SiNginxproxymanager} label="Manage Components" />
+      <NavigationItem to="/dashboard/add-backend-category" icon={SiNginxproxymanager} label="Manage Admin Panel Category" />
     </>
   
   const necessaryCodeUrls =
     <>
       <NavigationItem to="/dashboard/add-code" icon={MdAddCircle} label="Add Code" />
       <NavigationItem to="/dashboard/manage-code" icon={SiNginxproxymanager} label="Manage Code" />
+      <NavigationItem to="/dashboard/add-code-category" icon={SiNginxproxymanager} label="Manage Code Category" />
     </>
   
 
@@ -98,12 +101,14 @@ const Sidebar = () => {
               <Dropdown buttonText="Frontend Components" urls={componentUrls} />
             </li>
 
-            <li className="mb-4">
-              <Dropdown buttonText="Admin Panel Components" urls={backendComponentUrls} />
-            </li>
+           
 
             <li className="mb-4">
               <Dropdown buttonText="Necessary Code" urls={necessaryCodeUrls} />
+            </li>
+            
+            <li className="mb-4">
+              <Dropdown buttonText="Admin Panel Components" urls={backendComponentUrls} />
             </li>
 
             

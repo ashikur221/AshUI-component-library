@@ -24,6 +24,11 @@ import ManageCode from "../pages/adminSide/necessaryCodeRelatedPages/ManageCode"
 import UpdateCode from "../pages/adminSide/necessaryCodeRelatedPages/UpdateCode";
 import CodeComponent from "../pages/clientSide/NecessaryCodeRelatedPages/CodeComponent";
 import CodeDetails from "../pages/clientSide/NecessaryCodeRelatedPages/CodeDetails";
+import Card from "../components/clientSide/Card";
+import AddFrontCategory from "../pages/adminSide/componentRelatedPages/frontendCategoryRelatedPages/AddFrontCategory";
+import AddCodeCategory from "../pages/adminSide/necessaryCodeRelatedPages/codeCategoryRelatedPage/AddCodeCategory";
+import AddBackendCategory from "../pages/adminSide/backendComponentRelatedPages/backendCategory/AddBackendCategory";
+import ComponentDetails2 from "../pages/clientSide/ComponentPage/ComponentDetails2";
 
 
 
@@ -42,8 +47,9 @@ const router = createBrowserRouter([
       },
       {
         path: "/component-details/:id",
-        element: <ComponentDetails></ComponentDetails>
+        element: <ComponentDetails2></ComponentDetails2>
       },
+      
       // admin pannel related routes
 
       {
@@ -62,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/code-details/:id",
         element: <CodeDetails></CodeDetails>
+      },
+      {
+        path: "/card",
+        element: <Card></Card>
       }
     ]
   },
@@ -93,6 +103,10 @@ const router = createBrowserRouter([
         path: "update-component/:id",
         element: <UpdateComponentForm></UpdateComponentForm>
       },
+      {
+        path: "add-front-category",
+        element: <AddFrontCategory></AddFrontCategory>
+      },
 
       // backend Component related routes 
       {
@@ -107,6 +121,10 @@ const router = createBrowserRouter([
         path: "update-backendComponent/:id",
         element: <UpdateBackendComponent></UpdateBackendComponent>
       },
+      {
+        path: "add-backend-category",
+        element: <AddBackendCategory></AddBackendCategory>
+      },
       // necessary code related routes 
       {
         path: "add-code",
@@ -119,7 +137,12 @@ const router = createBrowserRouter([
       {
         path: "update-code/:id",
         element: <UpdateCode></UpdateCode>
-      }
+      },
+      {
+        path: "add-code-category",
+        element: <AddCodeCategory></AddCodeCategory>
+      },
+      
     ]
   }
 ]);

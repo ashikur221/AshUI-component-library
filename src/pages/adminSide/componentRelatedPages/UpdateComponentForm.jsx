@@ -17,6 +17,16 @@ const UpdateComponentForm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
+
+
+  const { data: contents = [], refetch } = useQuery({
+    queryKey: ['allData'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/frontCategory');
+      return res.data;
+    }
+  })
+
   const { id } = useParams();
 
   // Fetch the component data
@@ -47,6 +57,7 @@ const UpdateComponentForm = () => {
     setIsLoading(true);
     const form = e.target;
     const componentName = form.componentName.value;
+    const category = form.category.value;
     const image = form.image.files[0];
     const componentDescription = form.componentDescription.value;
 
@@ -58,6 +69,7 @@ const UpdateComponentForm = () => {
 
     const data = {
       componentName,
+      category,
       componentDescription,
       componentCode: componentCode || component?.componentCode, // Keep original code if unchanged
       imageUrl,
@@ -87,65 +99,84 @@ const UpdateComponentForm = () => {
         <title>Dashboard | Update Frontend Component</title>
       </Helmet>
       <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded-md space-y-4">
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-semibold text-gray-700">Component Name:</label>
-            <input
-              type="text"
-              value={componentData.componentName} // Controlled input
-              name="componentName"
-              placeholder="Enter component name"
-              className="mt-1 w-full p-2 border border-gray-300 rounded"
-              required
-              onChange={(e) => setComponentData({ ...componentData, componentName: e.target.value })}
-            />
-          </div>
 
-          {/* Image URL */}
-          <div className="p-2 w-full">
-            <div className="relative">
-              <label className="leading-7 text-sm text-gray-600 font-bold">Component Image</label>
-              <br />
+        <div className="w-11/12 p-6 mx-auto">
+          <div className="grid lg:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-semibold text-gray-700">Component Name:</label>
               <input
-                type="file"
-                name="image"
-                className="file-input file-input-bordered file-input-md w-full"
+                type="text"
+                value={componentData.componentName} // Controlled input
+                name="componentName"
+                placeholder="Enter component name"
+                className="mt-1 w-full p-2 border border-gray-300 rounded"
+                required
+                onChange={(e) => setComponentData({ ...componentData, componentName: e.target.value })}
               />
             </div>
-            <div className="avatar">
-              <p>Already uploaded image:</p>
-              <div className="w-12 rounded">
-                <img src={componentData.imageUrl} alt="Component Preview" />
+
+            {/* Image URL */}
+            <div className=" w-full">
+              <div className="relative">
+                <label className=" text-sm text-gray-600 font-bold">Component Image</label>
+                <br />
+                <input
+                  type="file"
+                  name="image"
+                  className="file-input file-input-bordered file-input-md w-full"
+                />
+              </div>
+              <div className="avatar">
+                <p>Already uploaded image:</p>
+                <div className="w-12 rounded">
+                  <img src={componentData.imageUrl} alt="Component Preview" />
+                </div>
               </div>
             </div>
+
+           
+
+            <div className="">
+              <label className="text-sm text-gray-600 font-bold">Component Category</label><br />
+              <select name="category" className="select select-info w-full" required>
+                <option value="" disabled selected>Select Category</option>
+                {
+                  contents?.map(content => <option key={content?.category} value={content?.category}>{content?.category}</option>)
+                }
+              </select>
+            </div>
+
+
           </div>
 
-          <div>
-            <label className="block font-semibold text-gray-700">Description:</label>
-            <textarea
-              value={componentData.componentDescription} // Controlled input
-              name="componentDescription"
-              placeholder="Enter component description"
-              className="mt-1 w-full p-2 border border-gray-300 rounded"
-              rows="7"
-              onChange={(e) => setComponentData({ ...componentData, componentDescription: e.target.value })}
-            />
-          </div>
+          <div className="grid gap-4   lg:grid-cols-2">
+            <div>
+              <label className="block font-semibold text-gray-700">Description:</label>
+              <textarea
+                value={componentData.componentDescription} // Controlled input
+                name="componentDescription"
+                placeholder="Enter component description"
+                className="mt-1 w-full p-2 border border-gray-300 rounded"
+                rows="7"
+                onChange={(e) => setComponentData({ ...componentData, componentDescription: e.target.value })}
+              />
+            </div>
 
-          <div>
-            <label className="block font-semibold text-gray-700">Code:</label>
-            <CodeMirror
-              value={componentCode} // Controlled by state
-              height="200px"
-              extensions={[javascript()]}
-              theme="light"
-              onChange={(value) => setComponentCode(value)} // Update code on change
-              className="border border-gray-300 rounded"
-            />
+            <div>
+              <label className="block font-semibold text-gray-700">Code:</label>
+              <CodeMirror
+                value={componentCode} // Controlled by state
+                height="200px"
+                extensions={[javascript()]}
+                theme="light"
+                onChange={(value) => setComponentCode(value)} // Update code on change
+                className="border border-gray-300 rounded"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="w-1/4 mx-auto">
+        <div className="w-1/4 mx-auto mt-4">
           <button
             type="submit"
             className={`w-full py-2 px-4 rounded ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
